@@ -5,23 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111827">
 
-  <title>Tesla vs Gas Calculator</title>
+  <title>Tesla vs Palisade</title>
 
   <style>
     * {
       box-sizing: border-box;
     }
 
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --subtle: #f9fafb;
+      --green-bg: #ecfdf5;
+      --green: #047857;
+      --green-dark: #065f46;
+      --red-bg: #fef2f2;
+      --red: #b91c1c;
+      --blue: #2563eb;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                   Helvetica, Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
 
     .container {
-      max-width: 520px;
+      max-width: 540px;
       margin: 0 auto;
       padding: 24px 16px 48px;
     }
@@ -33,18 +48,54 @@
     }
 
     .subtitle {
-      margin: 6px 0 24px;
-      color: #6b7280;
+      margin: 6px 0 20px;
+      color: var(--muted);
       text-align: center;
       font-size: 15px;
     }
 
-    .card {
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: #e5e7eb;
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mode-toggle button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 600;
+      background: transparent;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    .mode-toggle button.active {
       background: white;
+      color: #111827;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .card {
+      background: var(--card);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      margin-bottom: 16px;
     }
 
     .field {
@@ -61,6 +112,13 @@
       margin-bottom: 6px;
     }
 
+    .help {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+
     .input-wrapper {
       position: relative;
     }
@@ -68,18 +126,18 @@
     input {
       width: 100%;
       padding: 13px 14px;
-      padding-right: 90px;
+      padding-right: 95px;
       font-size: 17px;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      background: white;
-      color: #111827;
+      background: var(--card);
+      color: var(--text);
       outline: none;
     }
 
     input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
     }
 
     .unit {
@@ -87,7 +145,7 @@
       right: 14px;
       top: 50%;
       transform: translateY(-50%);
-      color: #6b7280;
+      color: var(--muted);
       pointer-events: none;
       font-size: 15px;
     }
@@ -99,66 +157,92 @@
     }
 
     .result {
-      background: #f9fafb;
+      background: var(--subtle);
       border-radius: 12px;
       padding: 16px;
     }
 
     .result-label {
-      color: #6b7280;
+      color: var(--muted);
       font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: .04em;
       margin-bottom: 4px;
     }
 
     .result-value {
       font-size: 26px;
-      font-weight: 700;
+      font-weight: 750;
     }
 
     .savings {
       margin-top: 14px;
       padding: 18px;
       border-radius: 12px;
-      background: #ecfdf5;
+      background: var(--green-bg);
       text-align: center;
     }
 
     .savings-label {
-      color: #047857;
-      font-weight: 600;
+      color: var(--green);
+      font-weight: 650;
       font-size: 14px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: .04em;
     }
 
     .savings-value {
-      color: #065f46;
-      font-size: 36px;
+      color: var(--green-dark);
+      font-size: 38px;
       font-weight: 800;
       margin: 2px 0;
     }
 
     .savings-percent {
-      color: #047857;
+      color: var(--green);
       font-size: 15px;
     }
 
     .negative {
-      background: #fef2f2;
+      background: var(--red-bg);
     }
 
     .negative .savings-label,
     .negative .savings-value,
     .negative .savings-percent {
-      color: #b91c1c;
+      color: var(--red);
+    }
+
+    .equivalent {
+      margin-top: 14px;
+      padding: 16px;
+      background: var(--subtle);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .equivalent-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .equivalent-value {
+      font-size: 27px;
+      font-weight: 750;
+    }
+
+    .equivalent-help {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
     }
 
     .projection-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
       padding: 12px 0;
       border-bottom: 1px solid #e5e7eb;
     }
@@ -174,20 +258,60 @@
     .projection-value {
       font-weight: 700;
       font-size: 17px;
+      text-align: right;
     }
 
-    details {
-      margin-top: 4px;
-    }
-
-    summary {
+    details summary {
       cursor: pointer;
-      font-weight: 600;
-      color: #4b5563;
+      font-weight: 650;
+      color: #374151;
+      list-style-position: outside;
     }
 
     .advanced {
-      margin-top: 18px;
+      margin-top: 20px;
+    }
+
+    .section-heading {
+      margin: 22px 0 12px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+
+    .section-heading:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border: 0;
+    }
+
+    .charging-mix {
+      background: var(--subtle);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: -6px;
+      margin-bottom: 18px;
+    }
+
+    .assumption {
+      margin-bottom: 14px;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .assumption:last-child {
+      margin-bottom: 0;
+    }
+
+    .assumption strong {
+      display: block;
+      margin-bottom: 2px;
     }
 
     .footnote {
@@ -195,58 +319,45 @@
       text-align: center;
       font-size: 12px;
       margin-top: 20px;
+      line-height: 1.5;
     }
 
     @media (prefers-color-scheme: dark) {
-      body {
+      :root {
+        --bg: #111827;
+        --card: #1f2937;
+        --text: #f9fafb;
+        --muted: #9ca3af;
+        --border: #4b5563;
+        --subtle: #111827;
+        --green-bg: #064e3b;
+        --green: #a7f3d0;
+        --green-dark: #a7f3d0;
+        --red-bg: #7f1d1d;
+        --red: #fecaca;
+      }
+
+      .mode-toggle {
+        background: #374151;
+      }
+
+      .mode-toggle button {
+        color: #d1d5db;
+      }
+
+      .mode-toggle button.active {
         background: #111827;
-        color: #f9fafb;
+        color: white;
       }
 
-      .card {
-        background: #1f2937;
-      }
-
-      input {
-        background: #111827;
-        color: #f9fafb;
-        border-color: #4b5563;
-      }
-
-      .result {
-        background: #111827;
-      }
-
-      .projection-row {
+      .projection-row,
+      .section-heading {
         border-color: #374151;
       }
 
-      .projection-label {
+      .projection-label,
+      details summary {
         color: #d1d5db;
-      }
-
-      summary {
-        color: #d1d5db;
-      }
-
-      .savings {
-        background: #064e3b;
-      }
-
-      .savings-label,
-      .savings-value,
-      .savings-percent {
-        color: #a7f3d0;
-      }
-
-      .negative {
-        background: #7f1d1d;
-      }
-
-      .negative .savings-label,
-      .negative .savings-value,
-      .negative .savings-percent {
-        color: #fecaca;
       }
     }
   </style>
@@ -256,13 +367,22 @@
 
 <div class="container">
 
-  <h1>⚡ Tesla vs Gas</h1>
-  <div class="subtitle">What did driving electric save me?</div>
+  <h1>⚡ Tesla vs Palisade</h1>
+  <div class="subtitle">
+    Compare the energy cost of driving electric vs gas
+  </div>
+
+  <div class="mode-toggle">
+    <button id="tripButton" class="active">Trip</button>
+    <button id="annualButton">Annual</button>
+  </div>
+
+  <!-- PRIMARY INPUTS -->
 
   <div class="card">
 
     <div class="field">
-      <label for="distance">Distance</label>
+      <label id="distanceLabel" for="distance">Distance</label>
       <div class="input-wrapper">
         <input
           id="distance"
@@ -292,14 +412,14 @@
     </div>
 
     <div class="field">
-      <label for="electricityPrice">Electricity price</label>
+      <label for="electricityPrice">Home electricity</label>
       <div class="input-wrapper">
         <input
           id="electricityPrice"
           type="number"
           inputmode="decimal"
           min="0"
-          step="0.01"
+          step="0.001"
           value="0.17"
         >
         <span class="unit">$/kWh</span>
@@ -308,7 +428,12 @@
 
   </div>
 
+
+  <!-- MAIN RESULTS -->
+
   <div class="card">
+
+    <div class="card-title" id="costHeading">Trip energy cost</div>
 
     <div class="results">
 
@@ -325,46 +450,94 @@
     </div>
 
     <div class="savings" id="savingsBox">
-      <div class="savings-label" id="savingsLabel">You saved</div>
-      <div class="savings-value" id="savings">$0.00</div>
+      <div class="savings-label" id="savingsLabel">
+        Energy savings
+      </div>
+
+      <div class="savings-value" id="savings">
+        $0.00
+      </div>
+
       <div class="savings-percent" id="savingsPercent"></div>
+    </div>
+
+
+    <!-- GAS EQUIVALENT -->
+
+    <div class="equivalent">
+
+      <div class="equivalent-label">
+        Tesla equivalent gas price
+      </div>
+
+      <div class="equivalent-value" id="equivalentGas">
+        $0.00/gal
+      </div>
+
+      <div class="equivalent-help">
+        Gas would need to cost this much for the Palisade
+        to match the Tesla's energy cost per mile.
+      </div>
+
     </div>
 
   </div>
 
+
+  <!-- ADDITIONAL RESULTS -->
+
   <div class="card">
 
     <div class="projection-row">
-      <span class="projection-label">Savings per 1,000 miles</span>
+      <span class="projection-label">Tesla cost / mile</span>
+      <span class="projection-value" id="teslaPerMile">$0.000</span>
+    </div>
+
+    <div class="projection-row">
+      <span class="projection-label">Palisade cost / mile</span>
+      <span class="projection-value" id="gasPerMile">$0.000</span>
+    </div>
+
+    <div class="projection-row">
+      <span class="projection-label">Savings / mile</span>
+      <span class="projection-value" id="savingsPerMile">$0.000</span>
+    </div>
+
+    <div class="projection-row">
+      <span class="projection-label">Savings / 1,000 miles</span>
       <span class="projection-value" id="savings1000">$0</span>
     </div>
 
     <div class="projection-row">
-      <span class="projection-label">Savings per 10,000 miles</span>
+      <span class="projection-label">Savings / 10,000 miles</span>
       <span class="projection-value" id="savings10000">$0</span>
     </div>
 
-    <div class="projection-row">
-      <span class="projection-label">Cost per mile — Tesla</span>
-      <span class="projection-value" id="teslaPerMile">$0.00</span>
-    </div>
-
-    <div class="projection-row">
-      <span class="projection-label">Cost per mile — Palisade</span>
-      <span class="projection-value" id="gasPerMile">$0.00</span>
+    <div class="projection-row" id="monthlyRow" style="display:none;">
+      <span class="projection-label">Average monthly savings</span>
+      <span class="projection-value" id="monthlySavings">$0</span>
     </div>
 
   </div>
 
+
+  <!-- ADVANCED SETTINGS -->
+
   <div class="card">
 
     <details>
-      <summary>Vehicle settings</summary>
+
+      <summary>Vehicle & charging settings</summary>
 
       <div class="advanced">
 
+        <div class="section-heading">
+          Palisade
+        </div>
+
         <div class="field">
-          <label for="mpg">Palisade fuel economy</label>
+          <label for="mpg">Fuel economy</label>
+
           <div class="input-wrapper">
             <input
               id="mpg"
@@ -376,10 +549,20 @@
             >
             <span class="unit">MPG</span>
           </div>
+
+          <div class="help">
+            Change this to your actual observed MPG for the most accurate comparison.
+          </div>
+        </div>
+
+
+        <div class="section-heading">
+          Tesla
         </div>
 
         <div class="field">
-          <label for="efficiency">Tesla efficiency</label>
+          <label for="efficiency">Driving efficiency</label>
+
           <div class="input-wrapper">
             <input
               id="efficiency"
@@ -391,6 +574,84 @@
             >
             <span class="unit">Wh/mi</span>
           </div>
+
+          <div class="help">
+            Use the Wh/mi shown by your Tesla's trip computer when available.
+            This naturally captures weather, speed, HVAC use and driving style.
+          </div>
+        </div>
+
+
+        <div class="field">
+          <label for="chargingLoss">Charging loss</label>
+
+          <div class="input-wrapper">
+            <input
+              id="chargingLoss"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              max="40"
+              step="1"
+              value="10"
+            >
+            <span class="unit">%</span>
+          </div>
+
+          <div class="help">
+            Estimates energy lost between your utility meter and the battery.
+            Default: 10%.
+          </div>
+        </div>
+
+
+        <div class="section-heading">
+          Charging mix
+        </div>
+
+        <div class="field">
+
+          <label for="homePercent">Home charging</label>
+
+          <div class="input-wrapper">
+            <input
+              id="homePercent"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              max="100"
+              step="1"
+              value="100"
+            >
+            <span class="unit">%</span>
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="superchargerPrice">
+            Supercharger electricity
+          </label>
+
+          <div class="input-wrapper">
+            <input
+              id="superchargerPrice"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              value="0.40"
+            >
+            <span class="unit">$/kWh</span>
+          </div>
+
+        </div>
+
+
+        <div class="charging-mix" id="chargingMix">
+          100% home • 0% Supercharger
         </div>
 
       </div>
@@ -399,35 +660,159 @@
 
   </div>
 
+
+  <!-- ASSUMPTIONS -->
+
+  <div class="card">
+
+    <details>
+
+      <summary>How this is calculated</summary>
+
+      <div class="advanced">
+
+        <div class="assumption">
+          <strong>Gas cost</strong>
+          Distance ÷ Palisade MPG × gas price.
+        </div>
+
+        <div class="assumption">
+          <strong>Tesla driving consumption</strong>
+          Distance × Tesla Wh/mi.
+        </div>
+
+        <div class="assumption">
+          <strong>Charging losses</strong>
+          Tesla trip-computer efficiency represents energy used by the car.
+          The calculator estimates additional electricity drawn from the wall
+          to account for charging losses.
+        </div>
+
+        <div class="assumption">
+          <strong>Charging mix</strong>
+          Home and Supercharger electricity prices are weighted according to
+          the selected charging percentages.
+        </div>
+
+        <div class="assumption">
+          <strong>What isn't included</strong>
+          Insurance, depreciation, financing, registration and fixed ownership
+          costs are intentionally excluded. This calculator answers:
+          "What did it cost to drive these miles?"
+        </div>
+
+      </div>
+
+    </details>
+
+  </div>
+
+
   <div class="footnote">
-    Settings are saved automatically on this device.
+    Settings are stored locally on this device.<br>
+    Results are estimates and represent energy cost, not total vehicle ownership cost.
   </div>
 
 </div>
 
+
 <script>
 
+  let mode = "trip";
+
+
   const fields = {
-    distance: document.getElementById("distance"),
-    gasPrice: document.getElementById("gasPrice"),
-    electricityPrice: document.getElementById("electricityPrice"),
-    mpg: document.getElementById("mpg"),
-    efficiency: document.getElementById("efficiency")
+
+    distance:
+      document.getElementById("distance"),
+
+    gasPrice:
+      document.getElementById("gasPrice"),
+
+    electricityPrice:
+      document.getElementById("electricityPrice"),
+
+    mpg:
+      document.getElementById("mpg"),
+
+    efficiency:
+      document.getElementById("efficiency"),
+
+    chargingLoss:
+      document.getElementById("chargingLoss"),
+
+    homePercent:
+      document.getElementById("homePercent"),
+
+    superchargerPrice:
+      document.getElementById("superchargerPrice")
+
   };
 
+
   const defaults = {
-    distance: 100,
+
+    tripDistance: 100,
+
+    annualDistance: 15000,
+
     gasPrice: 3.25,
+
     electricityPrice: 0.17,
+
     mpg: 22,
-    efficiency: 260
+
+    efficiency: 260,
+
+    chargingLoss: 10,
+
+    homePercent: 100,
+
+    superchargerPrice: 0.40
+
   };
+
+
+  /* -------------------------
+     Formatting
+  -------------------------- */
+
+  function money(value, decimals = 2) {
+
+    return value.toLocaleString("en-US", {
+
+      style: "currency",
+
+      currency: "USD",
+
+      minimumFractionDigits: decimals,
+
+      maximumFractionDigits: decimals
+
+    });
+
+  }
+
+
+  /* -------------------------
+     Local Storage
+  -------------------------- */
 
   function loadSettings() {
 
-    Object.keys(fields).forEach(key => {
+    [
+      "gasPrice",
+      "electricityPrice",
+      "mpg",
+      "efficiency",
+      "chargingLoss",
+      "homePercent",
+      "superchargerPrice"
 
-      const saved = localStorage.getItem(key);
+    ].forEach(key => {
+
+      const saved =
+        localStorage.getItem(key);
 
       if (saved !== null) {
         fields[key].value = saved;
@@ -435,142 +820,426 @@
 
     });
 
+
+    const savedMode =
+      localStorage.getItem("mode");
+
+    if (
+      savedMode === "trip" ||
+      savedMode === "annual"
+    ) {
+      mode = savedMode;
+    }
+
+
+    const savedDistance =
+      localStorage.getItem(
+        mode === "trip"
+          ? "tripDistance"
+          : "annualDistance"
+      );
+
+
+    fields.distance.value =
+      savedDistance !== null
+        ? savedDistance
+        : (
+            mode === "trip"
+              ? defaults.tripDistance
+              : defaults.annualDistance
+          );
+
   }
+
 
   function saveSettings() {
 
-    Object.keys(fields).forEach(key => {
-      localStorage.setItem(key, fields[key].value);
+    [
+      "gasPrice",
+      "electricityPrice",
+      "mpg",
+      "efficiency",
+      "chargingLoss",
+      "homePercent",
+      "superchargerPrice"
+
+    ].forEach(key => {
+
+      localStorage.setItem(
+        key,
+        fields[key].value
+      );
+
     });
+
+
+    localStorage.setItem(
+      mode === "trip"
+        ? "tripDistance"
+        : "annualDistance",
+
+      fields.distance.value
+    );
+
+
+    localStorage.setItem(
+      "mode",
+      mode
+    );
 
   }
 
-  function money(value, decimals = 2) {
 
-    return value.toLocaleString("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals
-    });
-
-  }
+  /* -------------------------
+     Calculator
+  -------------------------- */
 
   function calculate() {
 
     const distance =
-      parseFloat(fields.distance.value) || 0;
+      Math.max(
+        0,
+        parseFloat(fields.distance.value) || 0
+      );
+
 
     const gasPrice =
-      parseFloat(fields.gasPrice.value) || 0;
+      Math.max(
+        0,
+        parseFloat(fields.gasPrice.value) || 0
+      );
 
-    const electricityPrice =
-      parseFloat(fields.electricityPrice.value) || 0;
+
+    const homeElectricityPrice =
+      Math.max(
+        0,
+        parseFloat(fields.electricityPrice.value) || 0
+      );
+
 
     const mpg =
-      parseFloat(fields.mpg.value) || defaults.mpg;
+      Math.max(
+        1,
+        parseFloat(fields.mpg.value) || defaults.mpg
+      );
+
 
     const efficiency =
-      parseFloat(fields.efficiency.value) || defaults.efficiency;
+      Math.max(
+        1,
+        parseFloat(fields.efficiency.value) || defaults.efficiency
+      );
 
 
-    // Gas vehicle cost
-
-    const gallonsUsed =
-      distance / mpg;
-
-    const gasCost =
-      gallonsUsed * gasPrice;
-
-
-    // Tesla cost
-
-    const kwhUsed =
-      distance * (efficiency / 1000);
-
-    const teslaCost =
-      kwhUsed * electricityPrice;
+    const chargingLoss =
+      Math.min(
+        40,
+        Math.max(
+          0,
+          parseFloat(fields.chargingLoss.value) || 0
+        )
+      );
 
 
-    // Savings
+    const homePercent =
+      Math.min(
+        100,
+        Math.max(
+          0,
+          parseFloat(fields.homePercent.value) || 0
+        )
+      );
 
-    const savings =
-      gasCost - teslaCost;
 
-    const savingsPercent =
-      gasCost > 0
-        ? (savings / gasCost) * 100
-        : 0;
+    const superchargerPercent =
+      100 - homePercent;
 
 
-    // Per-mile costs
+    const superchargerPrice =
+      Math.max(
+        0,
+        parseFloat(fields.superchargerPrice.value) || 0
+      );
+
+
+    /* -------------------------
+       Palisade
+    -------------------------- */
 
     const gasPerMile =
       gasPrice / mpg;
 
+
+    const gasCost =
+      distance * gasPerMile;
+
+
+    /* -------------------------
+       Tesla Charging Price
+    -------------------------- */
+
+    const weightedElectricityPrice =
+
+      (
+        homeElectricityPrice *
+        (homePercent / 100)
+      )
+
+      +
+
+      (
+        superchargerPrice *
+        (superchargerPercent / 100)
+      );
+
+
+    /* -------------------------
+       Charging Loss
+
+       Tesla Wh/mi represents energy
+       consumed by the vehicle.
+
+       If charging efficiency is 90%,
+       wall consumption is:
+
+       260 / .90 = 288.9 Wh/mi
+    -------------------------- */
+
+    const chargingEfficiency =
+      1 - (chargingLoss / 100);
+
+
+    const wallWhPerMile =
+
+      chargingEfficiency > 0
+
+        ? efficiency / chargingEfficiency
+
+        : efficiency;
+
+
+    const wallKwhPerMile =
+      wallWhPerMile / 1000;
+
+
     const teslaPerMile =
-      (efficiency / 1000) * electricityPrice;
+      wallKwhPerMile *
+      weightedElectricityPrice;
 
 
-    // Update UI
+    const teslaCost =
+      distance *
+      teslaPerMile;
 
-    document.getElementById("gasCost").textContent =
+
+    /* -------------------------
+       Savings
+    -------------------------- */
+
+    const savingsPerMile =
+      gasPerMile -
+      teslaPerMile;
+
+
+    const savings =
+      gasCost -
+      teslaCost;
+
+
+    const savingsPercent =
+
+      gasCost > 0
+
+        ? (savings / gasCost) * 100
+
+        : 0;
+
+
+    /* -------------------------
+       Equivalent Gas Price
+
+       Find gas price where:
+
+       gasPrice / MPG =
+       Tesla cost / mile
+
+       Therefore:
+
+       equivalentGas =
+       Tesla cost/mile × MPG
+    -------------------------- */
+
+    const equivalentGas =
+      teslaPerMile *
+      mpg;
+
+
+    /* -------------------------
+       Update Costs
+    -------------------------- */
+
+    document
+      .getElementById("gasCost")
+      .textContent =
       money(gasCost);
 
-    document.getElementById("teslaCost").textContent =
+
+    document
+      .getElementById("teslaCost")
+      .textContent =
       money(teslaCost);
 
-    document.getElementById("savings").textContent =
-      money(Math.abs(savings));
 
-    document.getElementById("savingsPercent").textContent =
-      Math.abs(savingsPercent).toFixed(1) +
-      "% cheaper";
-
+    /* -------------------------
+       Savings Display
+    -------------------------- */
 
     const savingsBox =
-      document.getElementById("savingsBox");
+      document.getElementById(
+        "savingsBox"
+      );
+
 
     const savingsLabel =
-      document.getElementById("savingsLabel");
+      document.getElementById(
+        "savingsLabel"
+      );
+
+
+    document
+      .getElementById("savings")
+      .textContent =
+      money(Math.abs(savings));
 
 
     if (savings >= 0) {
 
-      savingsBox.classList.remove("negative");
+      savingsBox
+        .classList
+        .remove("negative");
+
 
       savingsLabel.textContent =
-        "You saved";
+        mode === "annual"
+          ? "Annual energy savings"
+          : "Energy savings";
 
-      document.getElementById("savingsPercent").textContent =
+
+      document
+        .getElementById("savingsPercent")
+        .textContent =
+
         savingsPercent.toFixed(1) +
-        "% cheaper than gas";
+        "% cheaper than driving the Palisade";
 
-    } else {
+    }
 
-      savingsBox.classList.add("negative");
+    else {
+
+      savingsBox
+        .classList
+        .add("negative");
+
 
       savingsLabel.textContent =
         "Tesla costs more";
 
-      document.getElementById("savingsPercent").textContent =
-        Math.abs(savingsPercent).toFixed(1) +
-        "% more than gas";
+
+      document
+        .getElementById("savingsPercent")
+        .textContent =
+
+        Math.abs(savingsPercent)
+          .toFixed(1) +
+
+        "% more than driving the Palisade";
 
     }
 
 
-    document.getElementById("savings1000").textContent =
-      money((gasPerMile - teslaPerMile) * 1000, 0);
+    /* -------------------------
+       Secondary Results
+    -------------------------- */
 
-    document.getElementById("savings10000").textContent =
-      money((gasPerMile - teslaPerMile) * 10000, 0);
+    document
+      .getElementById("equivalentGas")
+      .textContent =
 
-    document.getElementById("teslaPerMile").textContent =
+      money(equivalentGas, 2) +
+      "/gal";
+
+
+    document
+      .getElementById("teslaPerMile")
+      .textContent =
+
       money(teslaPerMile, 3);
 
-    document.getElementById("gasPerMile").textContent =
+
+    document
+      .getElementById("gasPerMile")
+      .textContent =
+
       money(gasPerMile, 3);
+
+
+    document
+      .getElementById("savingsPerMile")
+      .textContent =
+
+      money(savingsPerMile, 3);
+
+
+    document
+      .getElementById("savings1000")
+      .textContent =
+
+      money(
+        savingsPerMile * 1000,
+        0
+      );
+
+
+    document
+      .getElementById("savings10000")
+      .textContent =
+
+      money(
+        savingsPerMile * 10000,
+        0
+      );
+
+
+    document
+      .getElementById("monthlySavings")
+      .textContent =
+
+      money(
+        savings / 12,
+        0
+      );
+
+
+    /* -------------------------
+       Charging Mix Text
+    -------------------------- */
+
+    document
+      .getElementById("chargingMix")
+      .textContent =
+
+      homePercent.toFixed(0) +
+      "% home • " +
+
+      superchargerPercent.toFixed(0) +
+      "% Supercharger • " +
+
+      money(
+        weightedElectricityPrice,
+        3
+      ) +
+
+      "/kWh blended";
 
 
     saveSettings();
@@ -578,17 +1247,230 @@
   }
 
 
-  Object.values(fields).forEach(field => {
+  /* -------------------------
+     Mode Switching
+  -------------------------- */
 
-    field.addEventListener(
-      "input",
-      calculate
+  function setMode(newMode) {
+
+    if (newMode === mode) {
+      return;
+    }
+
+
+    /*
+      Save the distance for the
+      mode we're leaving.
+    */
+
+    localStorage.setItem(
+
+      mode === "trip"
+        ? "tripDistance"
+        : "annualDistance",
+
+      fields.distance.value
+
     );
 
-  });
 
+    mode = newMode;
+
+
+    localStorage.setItem(
+      "mode",
+      mode
+    );
+
+
+    const tripButton =
+      document.getElementById(
+        "tripButton"
+      );
+
+
+    const annualButton =
+      document.getElementById(
+        "annualButton"
+      );
+
+
+    const monthlyRow =
+      document.getElementById(
+        "monthlyRow"
+      );
+
+
+    if (mode === "trip") {
+
+      tripButton
+        .classList
+        .add("active");
+
+      annualButton
+        .classList
+        .remove("active");
+
+
+      document
+        .getElementById("distanceLabel")
+        .textContent =
+        "Distance";
+
+
+      document
+        .getElementById("costHeading")
+        .textContent =
+        "Trip energy cost";
+
+
+      monthlyRow.style.display =
+        "none";
+
+
+      fields.distance.value =
+
+        localStorage.getItem(
+          "tripDistance"
+        )
+
+        ??
+
+        defaults.tripDistance;
+
+    }
+
+    else {
+
+      annualButton
+        .classList
+        .add("active");
+
+      tripButton
+        .classList
+        .remove("active");
+
+
+      document
+        .getElementById("distanceLabel")
+        .textContent =
+        "Miles per year";
+
+
+      document
+        .getElementById("costHeading")
+        .textContent =
+        "Annual energy cost";
+
+
+      monthlyRow.style.display =
+        "flex";
+
+
+      fields.distance.value =
+
+        localStorage.getItem(
+          "annualDistance"
+        )
+
+        ??
+
+        defaults.annualDistance;
+
+    }
+
+
+    calculate();
+
+  }
+
+
+  function updateModeUI() {
+
+    const tripButton =
+      document.getElementById(
+        "tripButton"
+      );
+
+
+    const annualButton =
+      document.getElementById(
+        "annualButton"
+      );
+
+
+    if (mode === "annual") {
+
+      annualButton
+        .classList
+        .add("active");
+
+      tripButton
+        .classList
+        .remove("active");
+
+
+      document
+        .getElementById("distanceLabel")
+        .textContent =
+        "Miles per year";
+
+
+      document
+        .getElementById("costHeading")
+        .textContent =
+        "Annual energy cost";
+
+
+      document
+        .getElementById("monthlyRow")
+        .style.display =
+        "flex";
+
+    }
+
+  }
+
+
+  /* -------------------------
+     Event Listeners
+  -------------------------- */
+
+  Object
+    .values(fields)
+    .forEach(field => {
+
+      field.addEventListener(
+        "input",
+        calculate
+      );
+
+    });
+
+
+  document
+    .getElementById("tripButton")
+    .addEventListener(
+      "click",
+      () => setMode("trip")
+    );
+
+
+  document
+    .getElementById("annualButton")
+    .addEventListener(
+      "click",
+      () => setMode("annual")
+    );
+
+
+  /* -------------------------
+     Start App
+  -------------------------- */
 
   loadSettings();
+
+  updateModeUI();
 
   calculate();
 
